@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:quize_app_teacher_student_module/ui/screen/login_screen.dart';
+import 'package:get/get.dart';
+import 'package:quize_app_teacher_student_module/ui/screen/user_selection_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/widget/gradian_color.dart';
 
 
@@ -17,9 +18,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Future.delayed(const Duration(seconds: 2)).then((value) async {
 
-      Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) =>  LoginScreen()));
+      Get.off(() =>  const UserSelectionScreen(),
+          duration: const Duration(milliseconds: 1200),
+      transition: Transition.fade);
+
+
 
     });
 

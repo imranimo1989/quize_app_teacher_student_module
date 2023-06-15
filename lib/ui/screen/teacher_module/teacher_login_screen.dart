@@ -1,38 +1,41 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/quiz_list_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/utility/colors.dart';
 
-import '../widget/app_Text_Form_Field_Widget.dart';
-import '../widget/app_text_widget.dart';
-import '../widget/gradian_color.dart';
-import '../widget/gradiant_button.dart';
+import '../../widget/app_Text_Form_Field_Widget.dart';
+import '../../widget/app_text_widget.dart';
+import '../../widget/gradian_color.dart';
+import '../../widget/gradiant_button.dart';
+import 'teacher_bottom_nav_bar_screen.dart';
 
 
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class TeacherLoginScreen extends StatefulWidget {
+  const TeacherLoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<TeacherLoginScreen> createState() => _TeacherLoginScreenState();
 }
 
 final _formKeyLogin = GlobalKey<FormState>();
 
-TextEditingController _employeeIdEtController = TextEditingController();
+TextEditingController _teacherEtController = TextEditingController();
 TextEditingController _passwordEtController = TextEditingController();
 
 
 bool isChecked = false;
 
-class _LoginScreenState extends State<LoginScreen> {
+class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
 
   final FocusNode _focusNodeEmail = FocusNode();
-  final FocusNode _focusNodepassword = FocusNode();
+  final FocusNode _focusNodePassword = FocusNode();
 
   @override
   void dispose() {
     _focusNodeEmail.dispose();
-    _focusNodepassword.dispose();
+    _focusNodePassword.dispose();
     super.dispose();
   }
 
@@ -51,10 +54,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void isCheckedCheckbox() {
     if (isChecked) {
-      _employeeIdEtController.text;
+      _teacherEtController.text;
       _passwordEtController.text;
     } else {
-      _employeeIdEtController.clear();
+      _teacherEtController.clear();
       _passwordEtController.clear();
     }
   }
@@ -67,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Container(
-              height: 700,
+              height: 500,
               width: double.infinity,
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -108,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               hintText: 'Enter your registered email',
                               textInputType: TextInputType.number,
                               preFixIcon: const Icon(Icons.person),
-                              controller: _employeeIdEtController, focusNode: _focusNodeEmail,),
+                              controller: _teacherEtController, focusNode: _focusNodeEmail,),
                             const SizedBox(
                               height: 12,
                             ),
@@ -123,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               hintText: 'Enter your Password',
                               obSecureText: true,
                               preFixIcon: const Icon(Icons.password),
-                              controller: _passwordEtController, focusNode: _focusNodepassword,),
+                              controller: _passwordEtController, focusNode: _focusNodePassword,),
                             const SizedBox(
                               height: 8,
                             ),
@@ -152,7 +155,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
 
                             GradiantButton(buttonText: 'Login', onPressed: () {
+
+
                               if (_formKeyLogin.currentState!.validate()) {
+
+                                Get.to(() =>  const TeacherBottomNavBarScreen(),
+                                    duration: const Duration(milliseconds: 500),
+                                    transition: Transition.rightToLeftWithFade);
 
 
                               }

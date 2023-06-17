@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../utility/colors.dart';
 
-class AppTextEditingStyle extends StatelessWidget {
+class AppTextFormFieldWidget extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
   final bool? obSecureText;
@@ -19,7 +19,7 @@ class AppTextEditingStyle extends StatelessWidget {
 
   final String? Function(String?)? validator;
 
-  const AppTextEditingStyle({
+  const AppTextFormFieldWidget({
     Key? key,
     required this.hintText,
     required this.controller,

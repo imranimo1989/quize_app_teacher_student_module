@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "814847705448",
+    "firebase_url": "https://iqra-quize-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "iqra-quize",
+    "storage_bucket": "iqra-quize.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:814847705448:android:763bcb04dd8620e84c16dd",
+        "android_client_info": {
+          "package_name": "com.iqraapps.iqraquiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "814847705448-h6ev8gee476tp6ueirdfutdopppn1p9a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOGwFI3oiAGh4JximxIxY-1U29Di5j8FE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "814847705448-h6ev8gee476tp6ueirdfutdopppn1p9a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.quize_app_teacher_student_module">
+    package="com.iqraapps.iqraquiz">
    <application
-        android:label="quize_app_teacher_student_module"
+        android:label="quiz_app_teacher_student_module"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

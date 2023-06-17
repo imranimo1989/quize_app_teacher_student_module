@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quize_app_teacher_student_module/ui/widget/gradiant_card.dart';
 
+import '../../../authentication/auth_controller.dart';
 import '../../widget/gradian_color.dart';
 
 class TeacherDashboardScreen extends StatefulWidget {
@@ -11,6 +12,10 @@ class TeacherDashboardScreen extends StatefulWidget {
 }
 
 class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
+  Future<void> _logOut() async {
+    await AuthController.instance.logout();
+  }
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -18,6 +23,9 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
         centerTitle: true,
         title: const Text("Teacher Dashboard"),
         flexibleSpace: gradiantColor(),
+        actions: [
+          IconButton(onPressed: _logOut, icon: const Icon(Icons.power_settings_new))
+        ],
       ),
       body:  const Center(
         child: Padding(

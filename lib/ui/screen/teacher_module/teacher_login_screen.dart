@@ -1,16 +1,13 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/quiz_list_screen.dart';
+import 'package:quize_app_teacher_student_module/authentication/login_controller.dart';
+import 'package:quize_app_teacher_student_module/ui/screen/sign_up_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/utility/colors.dart';
 
 import '../../widget/app_Text_Form_Field_Widget.dart';
 import '../../widget/app_text_widget.dart';
 import '../../widget/gradian_color.dart';
 import '../../widget/gradiant_button.dart';
-import 'teacher_bottom_nav_bar_screen.dart';
-
-
 
 class TeacherLoginScreen extends StatefulWidget {
   const TeacherLoginScreen({Key? key}) : super(key: key);
@@ -21,14 +18,12 @@ class TeacherLoginScreen extends StatefulWidget {
 
 final _formKeyLogin = GlobalKey<FormState>();
 
-TextEditingController _teacherEtController = TextEditingController();
-TextEditingController _passwordEtController = TextEditingController();
-
+final controller = Get.put(LoginController());
 
 bool isChecked = false;
+bool isLoginLoading = false;
 
 class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
-
   final FocusNode _focusNodeEmail = FocusNode();
   final FocusNode _focusNodePassword = FocusNode();
 
@@ -54,11 +49,22 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
 
   void isCheckedCheckbox() {
     if (isChecked) {
-      _teacherEtController.text;
-      _passwordEtController.text;
+      controller.email.text;
+      controller.password.text;
     } else {
-      _teacherEtController.clear();
-      _passwordEtController.clear();
+      controller.email.clear();
+      controller.password.clear();
+    }
+  }
+
+  void _handleLogin() {
+    if (_formKeyLogin.currentState!.validate()) {
+      // Perform signup logic here
+
+      LoginController.instance.loginWithFirebase(
+          controller.email.text.trim(), controller.password.text.trim());
+
+      isCheckedCheckbox();
     }
   }
 
@@ -74,7 +80,9 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
               width: double.infinity,
               decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(32), topRight: Radius.circular(32)),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(32),
+                    topRight: Radius.circular(32)),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(40.0),
@@ -92,7 +100,6 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                           height: 10,
                         ),
                         Column(
-
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             textHeading(
@@ -101,7 +108,7 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                             const SizedBox(
                               height: 24,
                             ),
-                            AppTextEditingStyle(
+                            AppTextFormFieldWidget(
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return "Please enter valid email id";
@@ -109,14 +116,15 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                                 return null;
                               },
                               hintText: 'Enter your registered email',
-                              textInputType: TextInputType.number,
-                              preFixIcon: const Icon(Icons.person),
-                              controller: _teacherEtController, focusNode: _focusNodeEmail,),
+                              textInputType: TextInputType.emailAddress,
+                              preFixIcon: const Icon(Icons.email),
+                              controller: controller.email,
+                              focusNode: _focusNodeEmail,
+                            ),
                             const SizedBox(
                               height: 12,
                             ),
-
-                            AppTextEditingStyle(
+                            AppTextFormFieldWidget(
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter your valid password';
@@ -126,7 +134,9 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                               hintText: 'Enter your Password',
                               obSecureText: true,
                               preFixIcon: const Icon(Icons.password),
-                              controller: _passwordEtController, focusNode: _focusNodePassword,),
+                              controller: controller.password,
+                              focusNode: _focusNodePassword,
+                            ),
                             const SizedBox(
                               height: 8,
                             ),
@@ -135,8 +145,8 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                               children: [
                                 Checkbox(
                                   checkColor: Colors.white,
-                                  fillColor:
-                                  MaterialStateProperty.resolveWith(getColor),
+                                  fillColor: MaterialStateProperty.resolveWith(
+                                      getColor),
                                   value: isChecked,
                                   onChanged: (bool? value) {
                                     setState(() {
@@ -153,20 +163,19 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                             const SizedBox(
                               height: 18,
                             ),
-
-                            GradiantButton(buttonText: 'Login', onPressed: () {
-
-
-                              if (_formKeyLogin.currentState!.validate()) {
-
-                                Get.to(() =>  const TeacherBottomNavBarScreen(),
+                             GradiantButton(
+                                buttonText: 'Login', onPressed: _handleLogin),
+                            const SizedBox(
+                              height: 18,
+                            ),
+                            GradiantButton(
+                              buttonText: 'Register',
+                              onPressed: () {
+                                Get.to(() => const SignupScreen(),
                                     duration: const Duration(milliseconds: 500),
                                     transition: Transition.rightToLeftWithFade);
-
-
-                              }
-                            },),
-
+                              },
+                            ),
                           ],
                         ),
                       ],
@@ -181,4 +190,3 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
     );
   }
 }
-

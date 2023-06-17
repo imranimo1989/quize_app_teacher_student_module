@@ -99,7 +99,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                             const SizedBox(
                               height: 24,
                             ),
-                            AppTextEditingStyle(
+                            AppTextFormFieldWidget(
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return "Please enter valid email id";
@@ -107,14 +107,14 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                                 return null;
                               },
                               hintText: 'Enter your registered email',
-                              textInputType: TextInputType.number,
+                              textInputType: TextInputType.emailAddress,
                               preFixIcon: const Icon(Icons.person),
                               controller: _studentEtController, focusNode: _focusNodeEmail,),
                             const SizedBox(
                               height: 12,
                             ),
 
-                            AppTextEditingStyle(
+                            AppTextFormFieldWidget(
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter your valid password';

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/quiz_creation_screen.dart';
@@ -12,21 +13,16 @@ class QuizListScreen extends StatefulWidget {
 }
 
 class _QuizListScreenState extends State<QuizListScreen> {
-  List<Question> questions = [];
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text("Teacher Dashboard"),
-        flexibleSpace: gradiantColor(),
-      ),
       floatingActionButton:  FloatingActionButton.extended(
         onPressed: (){
-          Get.to(()=>QuizCreationScreen(),
+          Get.to(()=> const NewQuizQuestionScreen(),
               duration: const Duration(milliseconds: 0),
               transition: Transition.cupertino);
 
@@ -35,30 +31,39 @@ class _QuizListScreenState extends State<QuizListScreen> {
         icon: const Icon(Icons.add),
         backgroundColor: secondaryColor,
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 16,),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-               // Question question = questions[index];
-                return  Card(
-                  margin: const EdgeInsets.only(left: 12,right: 12, bottom: 8),
-                  elevation: 2,
-                  child: ListTile( leading: CircleAvatar(
-                    backgroundColor: primaryColor,
-                    child: Text("${index+1}",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),),
-                    title: const Text(" What is name of capital city in bangladesh"),
-                    subtitle: const Text('Correct Option:  Dhaka'),
-                    horizontalTitleGap: 12,
+      body: StreamBuilder<QuerySnapshot>(
+        stream: _firestore.collection('quiz').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final questions = snapshot.data!.docs;
 
+            return ListView.builder(
+              itemCount: questions.length,
+              itemBuilder: (context, index) {
+                final questionData = questions[index].data() as Map<String, dynamic>;
+                final question = questionData['question'] as String;
+                final answers = questionData['answers'] as List<dynamic>;
+                final correctAnswer = answers[0] as String; // Set value at index 0
+
+                return Card(
+                  child: ListTile(
+                    leading: CircleAvatar(backgroundColor: primaryColor,foregroundColor: Colors.white,child: Text("${index+1}"),),
+                    title: Text(question),
+                    subtitle: Text('Answer: $correctAnswer'),
                   ),
                 );
               },
-            ),
-          ),
-        ],
+            );
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Text('Error retrieving quiz questions'),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       ),
     );
   }

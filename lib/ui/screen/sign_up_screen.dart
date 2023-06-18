@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quize_app_teacher_student_module/authentication/sign_up_controller.dart';
-import 'package:quize_app_teacher_student_module/authentication/user_auth.dart';
 import 'package:quize_app_teacher_student_module/model/create_user_model.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/teacher_bottom_nav_bar_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/teacher_login_screen.dart';
@@ -44,12 +45,16 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
 
-  Future<void> handleSignup(context) async {
+  Future<void> handleSignup() async {
     if (_formKey.currentState!.validate()) {
       // Perform signup logic here
 
+      //createProfileData();
 
-      var response = await UserAuth.createUser(
+      registerUser();
+
+
+     /* var response = await UserAuth.createUser(
           email: controller.email.text,
           password: controller.password.text,
           firstName: controller.firstName.text,
@@ -76,11 +81,58 @@ class _SignupScreenState extends State<SignupScreen> {
                 content: Text(response.message.toString()),
               );
             });
-      }
+      }*/
     }
   }
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+ /* void createProfileData() async {
+    User? user = _auth.currentUser;
+
+    if (user != null) {
+      try {
+        await _firestore.collection('users').doc(user.uid).set({
+          'email': controller.email.text.trim(),
+          'password': controller.password.text.trim(),
+          'firstName': controller.firstName.text.trim(),
+          'lastName': controller.lastName.text.trim(),
+          'number': controller.mobileNumber.text.trim(),
+        });
+        print('Profile data created successfully');
+      } catch (e) {
+        print('Error creating profile data: $e');
+      }
+    } else {
+      print('No user is currently logged in');
+    }
+  }*/
+
+  Future<void> registerUser() async {
+    try {
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: controller.email.text.trim(),
+        password: controller.password.text.trim(),
+      );
+
+      // Get the newly registered user's UID
+      String uid = userCredential.user!.uid;
+
+      // Store the user's profile data in Firestore
+      await _firestore.collection('users').doc(uid).set({
+        'email': controller.email.text.trim(),
+        'firstName': controller.firstName.text.trim(),
+        'lastName': controller.lastName.text.trim(),
+        'mobileNumber': controller.mobileNumber.text.trim(),
+      });
+
+
+      print('Registration successful');
+    } catch (e) {
+      print('Error registering user: $e');
+    }
+  }
 
 
 
@@ -192,7 +244,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
                   GradiantButton(
                     buttonText: 'Register',
-                    onPressed: (){handleSignup(context);}
+                    onPressed: (){handleSignup();}
                   ),
                   const SizedBox(height: 16.0),
                   Row(mainAxisAlignment: MainAxisAlignment.center,

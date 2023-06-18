@@ -1,8 +1,11 @@
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:quize_app_teacher_student_module/ui/widget/app_text_widget.dart';
 import 'package:quize_app_teacher_student_module/ui/widget/gradiant_card.dart';
 
-import '../../../authentication/auth_controller.dart';
-import '../../widget/gradian_color.dart';
+import '../../../authentication/user_auth.dart';
+
 
 class TeacherDashboardScreen extends StatefulWidget {
   const TeacherDashboardScreen({Key? key}) : super(key: key);
@@ -12,51 +15,58 @@ class TeacherDashboardScreen extends StatefulWidget {
 }
 
 class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
-  Future<void> _logOut() async {
-    await AuthController.instance.logout();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  @override
+  void initState() {
+    UserAuth.getTeacherProfileData();
+    super.initState();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text("Teacher Dashboard"),
-        flexibleSpace: gradiantColor(),
-        actions: [
-          IconButton(onPressed: _logOut, icon: const Icon(Icons.power_settings_new))
-        ],
-      ),
-      body:  const Center(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GradiantDashboardCard(title: "Total Questions", number: 50,),
-                  SizedBox(width: 8,),
-                  GradiantDashboardCard(title: "Total Answers", number: 30,),
 
-                ],
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GradiantDashboardCard(title: "Total Students", number: 150,),
-                  SizedBox(width: 8,),
-                  GradiantDashboardCard(title: "Inactive Student",number: 30,),
+      body:   StreamBuilder<QuerySnapshot>(
+          stream: _firestore.collection('quiz').snapshots(),
 
-                ],
-              ),
-            ],
-          ),
-        ),
+        builder: (context, snapshot) {
+          final questions = snapshot.data!.docs;
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                textHeading("Teacher Dashboard"),
+                const SizedBox(height: 60,),
+
+                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GradiantDashboardCard(title: "Total Questions", number: questions.length,),
+                    const SizedBox(width: 8,),
+                    const GradiantDashboardCard(title: "Total Answers", number: 30,),
+
+                  ],
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GradiantDashboardCard(title: "Total Students", number: 150,),
+                    SizedBox(width: 8,),
+                    GradiantDashboardCard(title: "Inactive Student",number: 30,),
+
+                  ],
+                ),
+              ],
+            ),
+          );
+        }
       ),
     );
   }

@@ -1,109 +1,116 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:quize_app_teacher_student_module/ui/utility/colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../widget/gradian_color.dart';
+class NewQuizQuestionScreen extends StatefulWidget {
+  const NewQuizQuestionScreen({super.key});
 
-class Question {
-  String questionText;
-  List<String> options;
-  int correctOptionIndex;
-
-  Question(
-      {required this.questionText,
-      required this.options,
-      required this.correctOptionIndex});
-}
-
-class QuizCreationScreen extends StatefulWidget {
   @override
-  _QuizCreationScreenState createState() => _QuizCreationScreenState();
+  _NewQuizQuestionScreenState createState() => _NewQuizQuestionScreenState();
 }
 
-class _QuizCreationScreenState extends State<QuizCreationScreen> {
-  List<Question> questions = [];
+class _NewQuizQuestionScreenState extends State<NewQuizQuestionScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _questionController = TextEditingController();
+  final _answerControllers = List.generate(4, (index) => TextEditingController());
+  String _correctAnswer = '';
 
-  String questionText = "";
-  List<String> options = ["", "", "", ""];
-  int correctOptionIndex = 0;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  void _submitQuizQuestion() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        final question = _questionController.text;
+        final answers = _answerControllers.map((controller) => controller.text).toList();
+
+        await _firestore.collection('quiz').add({
+          'question': question,
+          'answers': answers,
+          'correctAnswer': _correctAnswer,
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Quiz question submitted successfully')),
+        );
+
+        _formKey.currentState!.reset();
+        _questionController.clear();
+        _answerControllers.forEach((controller) => controller.clear());
+        setState(() {
+          _correctAnswer = '';
+        });
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error submitting quiz question')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: const Text("Add New Quiz"),
-        flexibleSpace: gradiantColor(),
+        title: Text('New Quiz Question'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              onChanged: (value) {
-                setState(() {
-                  questionText = value;
-                });
-              },
-              decoration: const InputDecoration(
-                labelText: 'Question',
+        padding: EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Quiz Question:',
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
-            ),
-            const SizedBox(height: 16.0),
-            for (int i = 0; i < options.length; i++)
-              Row(
-                children: [
-                  Radio<int>(
-                    value: i,
-                    groupValue: correctOptionIndex,
-                    onChanged: (int? value) {
-                      setState(() {
-                        correctOptionIndex = value!;
-                      });
-                    },
-                  ),
-                  Expanded(
-                    child: TextField(
+              SizedBox(height: 8.0),
+              TextFormField(
+                controller: _questionController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a question';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 16.0),
+              Text(
+                'Answers:',
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8.0),
+              for (int i = 0; i < 4; i++)
+                Row(
+                  children: [
+                    Radio<String>(
+                      value: 'answer$i',
+                      groupValue: _correctAnswer,
                       onChanged: (value) {
                         setState(() {
-                          options[i] = value;
+                          _correctAnswer = value!;
                         });
                       },
-                      decoration: InputDecoration(
-                        labelText: 'Option ${i + 1}',
+                    ),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _answerControllers[i],
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter an answer';
+                          }
+                          return null;
+                        },
                       ),
                     ),
-                  ),
-                ],
-              ),
-            const SizedBox(height: 16.0),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: secondaryColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25.0)),
+                  ],
                 ),
-                onPressed: () {
-                  if (questionText.isNotEmpty &&
-                      options.every((option) => option.isNotEmpty)) {
-                    setState(() {
-                      questions.add(Question(
-                        questionText: questionText,
-                        options: options,
-                        correctOptionIndex: correctOptionIndex,
-                      ));
-                    });
-                    Navigator.of(context).pop();
-                  }
-                },
-                child: const Text('Add'),
+              SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: _submitQuizQuestion,
+                child: Text('Submit'),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

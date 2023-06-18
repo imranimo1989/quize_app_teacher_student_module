@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quize_app_teacher_student_module/authentication/user_auth.dart';
 import 'package:quize_app_teacher_student_module/ui/widget/gradian_color.dart';
 
 import '../../authentication/auth_controller.dart';
@@ -18,6 +19,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
 
     Future.delayed(const Duration(seconds: 3)).then((value)=> Get.put(AuthController()));
+
+    UserAuth.getTeacherProfileData();
 
     super.initState();
   }

@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:quize_app_teacher_student_module/ui/widget/app_text_widget.dart';
@@ -14,7 +16,27 @@ class TeacherDashboardScreen extends StatefulWidget {
 
 class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  int totalStudents = 0;
 
+
+
+  Future<void> getStudent()async{
+    try {
+      final snapshot = await FirebaseFirestore.instance.collection('students').get();
+      setState(() {
+        final students =  snapshot.docs;
+        totalStudents = students.length;
+      });
+    } catch (e) {
+      log('Failed to fetch quizzes: $e');
+    }
+
+  }
+@override
+  void initState() {
+getStudent();
+super.initState();
+  }
 
 
   @override
@@ -47,10 +69,10 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                 const SizedBox(
                   height: 8,
                 ),
-                const Row(
+                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    GradiantDashboardCard(title: "Total Students", number: 150,),
+                    GradiantDashboardCard(title: "Total Students", number: totalStudents,),
                     SizedBox(width: 8,),
                     GradiantDashboardCard(title: "Inactive Student",number: 30,),
 

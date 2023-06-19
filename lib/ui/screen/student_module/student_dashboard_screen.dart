@@ -125,7 +125,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
               buttonText: 'Play Quiz',
               onPressed: () {
                 Get.to(
-                  () => PlayQuizScreen(),
+                  () => const PlayQuizScreen(),
                 );
               },
             )

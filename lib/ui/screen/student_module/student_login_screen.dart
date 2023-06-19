@@ -1,10 +1,8 @@
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quize_app_teacher_student_module/authentication/user_auth.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/student_module/student_dashboard_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/student_module/student_registration_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/utility/colors.dart';

@@ -7,11 +7,8 @@ import 'package:get/get.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/student_module/student_login_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/utility/colors.dart';
 import 'package:quize_app_teacher_student_module/ui/widget/app_text_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../../authentication/user_auth.dart';
 import '../../widget/gradian_color.dart';
 import '../../widget/gradiant_button.dart';
-import '../../widget/gradiant_dashboard_card.dart';
 import 'play_quiz_screen.dart';
 
 class StudentDashboardScreen extends StatefulWidget {

@@ -1,9 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quize_app_teacher_student_module/authentication/auth_controller.dart';
-import 'package:quize_app_teacher_student_module/authentication/login_controller.dart';
-import 'package:quize_app_teacher_student_module/authentication/sign_up_controller.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/splash_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/utility/colors.dart';
 

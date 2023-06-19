@@ -2,7 +2,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:quize_app_teacher_student_module/ui/widget/app_text_widget.dart';
-import '../../../authentication/user_auth.dart';
 import '../../widget/gradiant_dashboard_card.dart';
 
 
@@ -15,11 +14,6 @@ class TeacherDashboardScreen extends StatefulWidget {
 
 class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  @override
-  void initState() {
-    UserAuth.getTeacherProfileData();
-    super.initState();
-  }
 
 
 

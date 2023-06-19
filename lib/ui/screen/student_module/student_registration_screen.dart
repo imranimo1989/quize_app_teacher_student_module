@@ -58,7 +58,7 @@ class _StudentRegistrationScreenState extends State<StudentRegistrationScreen> {
     if (_formKeyStdRegister.currentState!.validate()) {
 
       if(_stdPassController.text == _stdConPassController.text){
-        registerUser();
+        _registerUser();
       }
       else{
         errorSnackBar("Password does not Match");
@@ -74,7 +74,7 @@ class _StudentRegistrationScreenState extends State<StudentRegistrationScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 
-  Future<void> registerUser() async {
+  Future<void> _registerUser() async {
     try {
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: _stdEmailController.text.trim(),

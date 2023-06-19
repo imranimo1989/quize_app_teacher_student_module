@@ -4,16 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quize_app_teacher_student_module/authentication/user_auth.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/quiz_list_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/student_list_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/teacher_dashboard_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/teacher_login_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/utility/colors.dart';
 import 'package:quize_app_teacher_student_module/ui/utility/snac_bar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../authentication/auth_controller.dart';
 import '../../widget/gradian_color.dart';
 
 class TeacherBottomNavBarScreen extends StatefulWidget {

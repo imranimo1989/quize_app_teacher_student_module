@@ -11,7 +11,6 @@ import '../../widget/app_Text_Form_Field_Widget.dart';
 import '../../widget/app_text_widget.dart';
 import '../../widget/gradian_color.dart';
 import '../../widget/gradiant_button.dart';
-import '../student_module/student_registration_screen.dart';
 
 
 class TeacherLoginScreen extends StatefulWidget {
@@ -205,7 +204,7 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                             buttonText: 'Register',
                             onPressed: () {
                               Get.to(
-                                      () => const StudentRegistrationScreen(),
+                                      () => const TeacherRegistrationScreen(),
                                   duration:
                                   const Duration(milliseconds: 500),
                                   transition:

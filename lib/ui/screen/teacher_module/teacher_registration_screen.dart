@@ -59,7 +59,7 @@ class _TeacherRegistrationScreenState extends State<TeacherRegistrationScreen> {
     if (_formKeyTeacherRegister.currentState!.validate()) {
 
       if(_teacherPassController.text == _teacherConPassController.text){
-        registerUser();
+        _registerUser();
       }
       else{
         errorSnackBar("Password does not Match");
@@ -75,7 +75,7 @@ class _TeacherRegistrationScreenState extends State<TeacherRegistrationScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 
-  Future<void> registerUser() async {
+  Future<void> _registerUser() async {
     try {
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: _teacherEmailController.text.trim(),

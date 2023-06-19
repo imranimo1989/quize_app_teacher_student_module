@@ -1,11 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quize_app_teacher_student_module/authentication/user_auth.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/user_selection_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/widget/gradian_color.dart';
 
-import '../../authentication/auth_controller.dart';
 
 
 class SplashScreen extends StatefulWidget {
@@ -21,7 +19,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Future.delayed(const Duration(seconds: 3)).then((value)=> Get.off(()=>const UserSelectionScreen()));
 
-    UserAuth.getTeacherProfileData();
 
     super.initState();
   }

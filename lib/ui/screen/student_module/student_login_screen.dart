@@ -22,7 +22,7 @@ class StudentLoginScreen extends StatefulWidget {
   State<StudentLoginScreen> createState() => _StudentLoginScreenState();
 }
 
-final _formKeyLogin = GlobalKey<FormState>();
+final _formKeyStdLogin = GlobalKey<FormState>();
 
 
 bool _isChecked = false;
@@ -68,7 +68,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
   }
 
   void _handleLogin() {
-    if (_formKeyLogin.currentState!.validate()) {
+    if (_formKeyStdLogin.currentState!.validate()) {
       // Perform signup logic here
 
       _isCheckedCheckbox();
@@ -122,7 +122,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                   padding: const EdgeInsets.all(40.0),
                   child: Center(
                     child: Form(
-                      key: _formKeyLogin,
+                      key: _formKeyStdLogin,
                       child: Column(
                         children: [
                           Image.asset(

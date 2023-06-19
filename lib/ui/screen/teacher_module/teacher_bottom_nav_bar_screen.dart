@@ -12,8 +12,8 @@ import '../../widget/gradian_color.dart';
 
 class TeacherBottomNavBarScreen extends StatefulWidget {
 
-
-  const TeacherBottomNavBarScreen({Key? key}) : super(key: key);
+final String? uid;
+  const TeacherBottomNavBarScreen({required this.uid, super.key});
 
   @override
   State<TeacherBottomNavBarScreen> createState() => _TeacherBottomNavBarScreenState();

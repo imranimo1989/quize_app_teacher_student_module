@@ -82,4 +82,36 @@ class UserAuth {
     teacherLastName = prefs.getString("lastName");
     teacherMobileNumber = prefs.getString("mobileNumber");
   }
+
+  ///====================================
+
+  static String? stdEmail, stdLastName, stdFirstName, stdMobileNumber;
+
+  static Future<void>saveStudentProfileData([String? email, String? lastName,
+    String? firstName, String? mobileNumber])async{
+
+    final sharedPreferences = await SharedPreferences.getInstance();
+
+    sharedPreferences.setString("email", email ?? "");
+    sharedPreferences.setString("lastName", lastName ?? "");
+    sharedPreferences.setString("firstName", firstName ?? "");
+    sharedPreferences.setString("mobileNumber", mobileNumber ?? "");
+
+    stdEmail = email;
+    stdLastName = lastName;
+    stdFirstName=firstName;
+    stdMobileNumber = mobileNumber;
+
+  }
+
+  static Future<void> getStudentProfileData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    stdEmail = prefs.getString("email");
+    stdFirstName = prefs.getString("firstName");
+    stdLastName = prefs.getString("lastName");
+    stdMobileNumber = prefs.getString("mobileNumber");
+  }
+
+
 }

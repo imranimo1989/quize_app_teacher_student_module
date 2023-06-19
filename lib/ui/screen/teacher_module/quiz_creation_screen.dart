@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 
 class NewQuizQuestionScreen extends StatefulWidget {
   const NewQuizQuestionScreen({super.key});
@@ -28,19 +29,27 @@ class _NewQuizQuestionScreenState extends State<NewQuizQuestionScreen> {
           'correctAnswer': _correctAnswer,
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Quiz question submitted successfully')),
+        Get.snackbar(
+          "Success",
+          "Quiz created Successfully",
+          icon: const CircleAvatar (backgroundColor: Colors.green, child: Icon(Icons.check, color: Colors.white)),
+          snackPosition: SnackPosition.TOP,
         );
 
         _formKey.currentState!.reset();
         _questionController.clear();
-        _answerControllers.forEach((controller) => controller.clear());
+        for (var controller in _answerControllers) {
+          controller.clear();
+        }
         setState(() {
           _correctAnswer = '';
         });
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error submitting quiz question')),
+        Get.snackbar(
+          "Error",
+          "Quiz creation failed! something went wrong",
+          icon: const CircleAvatar (backgroundColor: Colors.green, child: Icon(Icons.check, color: Colors.white)),
+          snackPosition: SnackPosition.TOP,
         );
       }
     }
@@ -50,20 +59,20 @@ class _NewQuizQuestionScreenState extends State<NewQuizQuestionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('New Quiz Question'),
+        title: const Text('New Quiz Question'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
+              const Text(
                 'Quiz Question:',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               TextFormField(
                 controller: _questionController,
                 validator: (value) {
@@ -73,12 +82,12 @@ class _NewQuizQuestionScreenState extends State<NewQuizQuestionScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 16.0),
-              Text(
+              const SizedBox(height: 16.0),
+              const Text(
                 'Answers:',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               for (int i = 0; i < 4; i++)
                 Row(
                   children: [
@@ -104,10 +113,10 @@ class _NewQuizQuestionScreenState extends State<NewQuizQuestionScreen> {
                     ),
                   ],
                 ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: _submitQuizQuestion,
-                child: Text('Submit'),
+                child: const Text('Submit'),
               ),
             ],
           ),

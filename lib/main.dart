@@ -12,7 +12,7 @@ import 'firebase_options.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform).then((value) => Get.put(AuthController()));
+  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -42,8 +42,8 @@ class MyApp extends StatelessWidget {
 class StoreBindings extends Bindings {
   @override
   void dependencies() {
-    Get.put(SignUpController());
-    Get.put(LoginController());
+   // Get.put(SignUpController());
+    //Get.put(LoginController());
   // Get.put(CreateUserController());
 
 

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:quize_app_teacher_student_module/authentication/user_auth.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/quiz_list_screen.dart';
@@ -20,6 +21,9 @@ class TeacherBottomNavBarScreen extends StatefulWidget {
 
 class _TeacherBottomNavBarScreenState extends State<TeacherBottomNavBarScreen> {
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+
 @override
   void initState() {
   UserAuth.getTeacherProfileData();
@@ -40,7 +44,7 @@ class _TeacherBottomNavBarScreenState extends State<TeacherBottomNavBarScreen> {
   Future<void> _logOut() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.clear();
-    await AuthController.instance.logout();
+  //  await AuthController.instance.logout();
 
   }
 

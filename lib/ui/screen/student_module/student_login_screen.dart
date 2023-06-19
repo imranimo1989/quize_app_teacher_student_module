@@ -1,14 +1,19 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quize_app_teacher_student_module/authentication/user_auth.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/student_module/student_dashboard_screen.dart';
+import 'package:quize_app_teacher_student_module/ui/screen/student_module/student_registration_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/utility/colors.dart';
+import 'package:quize_app_teacher_student_module/ui/utility/snac_bar.dart';
 
 import '../../widget/app_Text_Form_Field_Widget.dart';
 import '../../widget/app_text_widget.dart';
 import '../../widget/gradian_color.dart';
 import '../../widget/gradiant_button.dart';
-
-
 
 class StudentLoginScreen extends StatefulWidget {
   const StudentLoginScreen({Key? key}) : super(key: key);
@@ -19,16 +24,18 @@ class StudentLoginScreen extends StatefulWidget {
 
 final _formKeyLogin = GlobalKey<FormState>();
 
-TextEditingController _studentEtController = TextEditingController();
-TextEditingController _passwordEtController = TextEditingController();
 
+bool _isChecked = false;
 
-bool isChecked = false;
 
 class _StudentLoginScreenState extends State<StudentLoginScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final FocusNode _focusNodeEmail = FocusNode();
   final FocusNode _focusNodePassword = FocusNode();
+
+  final _stdEmailController = TextEditingController();
+  final _stdPasswordController = TextEditingController();
 
   @override
   void dispose() {
@@ -50,13 +57,47 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
     return primaryColor;
   }
 
-  void isCheckedCheckbox() {
-    if (isChecked) {
-      _studentEtController.text;
-      _passwordEtController.text;
+  void _isCheckedCheckbox() {
+    if (_isChecked) {
+      _stdEmailController.text;
+      _stdPasswordController.text;
     } else {
-      _studentEtController.clear();
-      _passwordEtController.clear();
+      _stdEmailController.clear();
+      _stdPasswordController.clear();
+    }
+  }
+
+  void _handleLogin() {
+    if (_formKeyLogin.currentState!.validate()) {
+      // Perform signup logic here
+
+      _isCheckedCheckbox();
+      loginUser();
+    }
+  }
+
+  Future<void> loginUser() async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: _stdEmailController.text.trim(),
+          password: _stdPasswordController.text.trim());
+
+      // Get the logged-in user's UID
+      String uid = userCredential.user!.uid;
+
+
+      log('Login successful');
+
+      Get.offAll(() =>  StudentDashboardScreen(uId: uid,),
+          duration: const Duration(milliseconds: 500),
+          transition: Transition.rightToLeftWithFade);
+
+      successSnackBar("Login Successfully");
+    } catch (e) {
+      log('Error logging in: $e');
+
+      errorSnackBar(
+          "Something went wrong! please input correct user name password, or $e");
     }
   }
 
@@ -72,98 +113,107 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
               width: double.infinity,
               decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(32), topRight: Radius.circular(32)),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(32),
+                    topRight: Radius.circular(32)),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(40.0),
-                child: Center(
-                  child: Form(
-                    key: _formKeyLogin,
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          'assets/images/icons/idea.png',
-                          width: 50,
-                          fit: BoxFit.scaleDown,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Column(
-
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            textHeading(
-                              'Student Login',
-                            ),
-                            const SizedBox(
-                              height: 24,
-                            ),
-                            AppTextFormFieldWidget(
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "Please enter valid email id";
-                                }
-                                return null;
-                              },
-                              hintText: 'Enter your registered email',
-                              textInputType: TextInputType.emailAddress,
-                              preFixIcon: const Icon(Icons.person),
-                              controller: _studentEtController, focusNode: _focusNodeEmail,),
-                            const SizedBox(
-                              height: 12,
-                            ),
-
-                            AppTextFormFieldWidget(
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your valid password';
-                                }
-                                return null;
-                              },
-                              hintText: 'Enter your Password',
-                              obSecureText: true,
-                              preFixIcon: const Icon(Icons.password),
-                              controller: _passwordEtController, focusNode: _focusNodePassword,),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Checkbox(
-                                  checkColor: Colors.white,
-                                  fillColor:
-                                  MaterialStateProperty.resolveWith(getColor),
-                                  value: isChecked,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      isChecked = value!;
-                                    });
-                                  },
-                                ),
-                                const Text(
-                                  'Remember me',
-                                  style: TextStyle(color: primaryColor),
-                                )
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 18,
-                            ),
-
-                            GradiantButton(buttonText: 'Login', onPressed: () {
-                              if (_formKeyLogin.currentState!.validate()) {
-
-                                Get.to(() =>  const StudentDashboard(),
-                                    duration: const Duration(milliseconds: 500),
-                                    transition: Transition.rightToLeftWithFade);
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(40.0),
+                  child: Center(
+                    child: Form(
+                      key: _formKeyLogin,
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            'assets/images/icons/idea.png',
+                            width: 50,
+                            fit: BoxFit.scaleDown,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          textHeading(
+                            'Student Login',
+                          ),
+                          const SizedBox(
+                            height: 24,
+                          ),
+                          AppTextFormFieldWidget(
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Please enter valid email id";
                               }
-                            },),
-
-                          ],
-                        ),
-                      ],
+                              return null;
+                            },
+                            hintText: 'Enter your registered email',
+                            textInputType: TextInputType.emailAddress,
+                            preFixIcon: const Icon(Icons.email),
+                            controller: _stdEmailController,
+                            focusNode: _focusNodeEmail,
+                          ),
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          AppTextFormFieldWidget(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your valid password';
+                              }
+                              return null;
+                            },
+                            hintText: 'Enter your Password',
+                            obSecureText: true,
+                            preFixIcon: const Icon(Icons.password),
+                            controller: _stdPasswordController,
+                            focusNode: _focusNodePassword,
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Checkbox(
+                                checkColor: Colors.white,
+                                fillColor:
+                                    MaterialStateProperty.resolveWith(
+                                        getColor),
+                                value: _isChecked,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    _isChecked = value!;
+                                  });
+                                },
+                              ),
+                              const Text(
+                                'Remember me',
+                                style: TextStyle(color: primaryColor),
+                              )
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 18,
+                          ),
+                          GradiantButton(
+                              buttonText: 'Login',
+                              onPressed: _handleLogin),
+                          const SizedBox(
+                            height: 18,
+                          ),
+                          GradiantButton(
+                            buttonText: 'Register',
+                            onPressed: () {
+                              Get.to(
+                                  () => const StudentRegistrationScreen(),
+                                  duration:
+                                      const Duration(milliseconds: 500),
+                                  transition:
+                                      Transition.rightToLeftWithFade);
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -175,4 +225,3 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
     );
   }
 }
-

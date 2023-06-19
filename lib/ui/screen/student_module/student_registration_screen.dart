@@ -1,29 +1,35 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quize_app_teacher_student_module/authentication/sign_up_controller.dart';
-import 'package:quize_app_teacher_student_module/model/create_user_model.dart';
-import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/teacher_bottom_nav_bar_screen.dart';
-import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/teacher_login_screen.dart';
+import 'package:quize_app_teacher_student_module/ui/screen/student_module/student_login_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/utility/colors.dart';
+import 'package:quize_app_teacher_student_module/ui/utility/snac_bar.dart';
+import '../../widget/app_Text_Form_Field_Widget.dart';
+import '../../widget/gradian_color.dart';
+import '../../widget/gradiant_button.dart';
 
-import '../widget/app_Text_Form_Field_Widget.dart';
-import '../widget/gradian_color.dart';
-import '../widget/gradiant_button.dart';
-
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class StudentRegistrationScreen extends StatefulWidget {
+  const StudentRegistrationScreen({super.key});
 
   @override
-  _SignupScreenState createState() => _SignupScreenState();
+  _StudentRegistrationScreenState createState() => _StudentRegistrationScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _StudentRegistrationScreenState extends State<StudentRegistrationScreen> {
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeyStdRegister = GlobalKey<FormState>();
 
-  final controller = Get.put(SignUpController());
+
+  final _stdEmailController = TextEditingController();
+  final _stdPassController = TextEditingController();
+  final _stdConPassController = TextEditingController();
+  final _stdFirstNameController = TextEditingController();
+  final _stdLastNameController = TextEditingController();
+  final _stdMobileNumberController = TextEditingController();
+
 
 
   final FocusNode _focusNodeEmail = FocusNode();
@@ -32,6 +38,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final FocusNode _focusNodeFirstName = FocusNode();
   final FocusNode _focusNodeLastName = FocusNode();
   final FocusNode _focusNodeMobile = FocusNode();
+
+
 
   @override
   void dispose() {
@@ -46,91 +54,60 @@ class _SignupScreenState extends State<SignupScreen> {
 
 
   Future<void> handleSignup() async {
-    if (_formKey.currentState!.validate()) {
-      // Perform signup logic here
 
-      //createProfileData();
+    if (_formKeyStdRegister.currentState!.validate()) {
 
-      registerUser();
+      if(_stdPassController.text == _stdConPassController.text){
+        registerUser();
+      }
+      else{
+        errorSnackBar("Password does not Match");
+      }
 
 
-     /* var response = await UserAuth.createUser(
-          email: controller.email.text,
-          password: controller.password.text,
-          firstName: controller.firstName.text,
-          lastName: controller.lastName.text,
-          mobileNumber: controller.mobileNumber.text, type: "Teacher");
 
-      if (response.code == 200) {
 
-        SignUpController.instance.registration(
-            controller.email.text.trim(), controller.password.text.trim());
-
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                content: Text(response.message.toString()),
-              );
-            });
-      } else {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                content: Text(response.message.toString()),
-              );
-            });
-      }*/
     }
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
- /* void createProfileData() async {
-    User? user = _auth.currentUser;
-
-    if (user != null) {
-      try {
-        await _firestore.collection('users').doc(user.uid).set({
-          'email': controller.email.text.trim(),
-          'password': controller.password.text.trim(),
-          'firstName': controller.firstName.text.trim(),
-          'lastName': controller.lastName.text.trim(),
-          'number': controller.mobileNumber.text.trim(),
-        });
-        print('Profile data created successfully');
-      } catch (e) {
-        print('Error creating profile data: $e');
-      }
-    } else {
-      print('No user is currently logged in');
-    }
-  }*/
 
   Future<void> registerUser() async {
     try {
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: controller.email.text.trim(),
-        password: controller.password.text.trim(),
+        email: _stdEmailController.text.trim(),
+        password: _stdPassController.text.trim(),
       );
 
       // Get the newly registered user's UID
       String uid = userCredential.user!.uid;
 
       // Store the user's profile data in Firestore
-      await _firestore.collection('users').doc(uid).set({
-        'email': controller.email.text.trim(),
-        'firstName': controller.firstName.text.trim(),
-        'lastName': controller.lastName.text.trim(),
-        'mobileNumber': controller.mobileNumber.text.trim(),
+      await _firestore.collection('students').doc(uid).set({
+        'email': _stdEmailController.text.trim(),
+        'firstName': _stdFirstNameController.text.trim(),
+        'lastName': _stdLastNameController.text.trim(),
+        'mobileNumber': _stdMobileNumberController.text.trim(),
       });
 
 
-      print('Registration successful');
+      log('Registration successful');
+
+
+      successSnackBar("Registration Successfully");
+
+
+      Get.offAll(() =>  const StudentLoginScreen(),
+          duration: const Duration(milliseconds: 500),
+          transition: Transition.rightToLeftWithFade);
+
     } catch (e) {
-      print('Error registering user: $e');
+      log('Error registering user: $e');
+
+
+      errorSnackBar("Something went wrong, registration not completed, $e");
     }
   }
 
@@ -143,7 +120,7 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Teacher Dashboard"),
+        title: const Text("Student Registration"),
         flexibleSpace: gradiantColor(),
       ),
       body: SingleChildScrollView(
@@ -151,9 +128,9 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Form(
-              key: _formKey,
+              key: _formKeyStdRegister,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
 
@@ -167,7 +144,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     hintText: 'Email',
                     textInputType: TextInputType.emailAddress,
                     preFixIcon: const Icon(Icons.mail),
-                    controller: controller.email,
+                    controller: _stdEmailController,
                     focusNode: _focusNodeEmail,),
                   const SizedBox(height: 8.0),
 
@@ -180,8 +157,9 @@ class _SignupScreenState extends State<SignupScreen> {
                     },
                     hintText: 'Password',
                     textInputType: TextInputType.visiblePassword,
+                    obSecureText: true,
                     preFixIcon: const Icon(Icons.password),
-                    controller: controller.password,
+                    controller: _stdPassController,
                     focusNode: _focusNodePassword,),
                   const SizedBox(height: 8.0),
 
@@ -195,7 +173,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     hintText: 'Confirm Password',
                     textInputType: TextInputType.visiblePassword,
                     preFixIcon: const Icon(Icons.password),
-                    controller: controller.confirmPassword,
+                    obSecureText: true,
+                    controller: _stdConPassController,
                     focusNode: _focusNodeConfirmPassword,),
                   const SizedBox(height: 8.0),
 
@@ -210,7 +189,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     hintText: 'First Name',
                     textInputType: TextInputType.name,
                     preFixIcon: const Icon(Icons.person),
-                    controller: controller.firstName,
+                    controller: _stdFirstNameController,
                     focusNode: _focusNodeFirstName,),
                   const SizedBox(height: 8.0),
 
@@ -224,7 +203,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     hintText: 'Last Name',
                     textInputType: TextInputType.name,
                     preFixIcon: const Icon(Icons.person),
-                    controller: controller.lastName,
+                    controller: _stdLastNameController,
                     focusNode: _focusNodeLastName,),
                   const SizedBox(height: 8.0),
 
@@ -238,7 +217,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     hintText: 'Mobile Number',
                     textInputType: TextInputType.phone,
                     preFixIcon: const Icon(Icons.phone_android),
-                    controller: controller.mobileNumber,
+                    controller: _stdMobileNumberController,
                     focusNode: _focusNodeMobile,),
                   const SizedBox(height: 16.0),
 
@@ -263,21 +242,9 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void _signInScreen() {
-    Get.to(() => const TeacherLoginScreen(),
+    Get.to(() => const StudentLoginScreen(),
         duration: const Duration(milliseconds: 500),
         transition: Transition.rightToLeftWithFade);
-  }
-
-  void _createUser() {
-    final user = CreateUserModel(
-         email: controller.email.text.trim(),
-        password: controller.password.text.trim(),
-        fistName: controller.firstName.text.trim(),
-        lastName: controller.lastName.text.trim(),
-        number:controller.lastName.text.trim(),
-        );
-   // SignUpController.instance.createUser(user);
-   Get.to(()=> const TeacherBottomNavBarScreen());
   }
 
 }

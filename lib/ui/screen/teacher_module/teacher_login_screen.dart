@@ -1,18 +1,18 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quize_app_teacher_student_module/authentication/login_controller.dart';
 import 'package:quize_app_teacher_student_module/authentication/user_auth.dart';
-import 'package:quize_app_teacher_student_module/ui/screen/sign_up_screen.dart';
+import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/teacher_registration_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/utility/colors.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../widget/app_Text_Form_Field_Widget.dart';
 import '../../widget/app_text_widget.dart';
 import '../../widget/gradian_color.dart';
 import '../../widget/gradiant_button.dart';
-import 'teacher_bottom_nav_bar_screen.dart';
+
 
 class TeacherLoginScreen extends StatefulWidget {
   const TeacherLoginScreen({Key? key}) : super(key: key);
@@ -23,17 +23,14 @@ class TeacherLoginScreen extends StatefulWidget {
 
 final _formKeyLogin = GlobalKey<FormState>();
 
-final controller = Get.put(LoginController());
+//final controller = Get.put(LoginController());
 
 bool isChecked = false;
 bool isLoginLoading = false;
 
 class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
-
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
 
   final FocusNode _focusNodeEmail = FocusNode();
   final FocusNode _focusNodePassword = FocusNode();
@@ -57,7 +54,7 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
     }
     return primaryColor;
   }
-
+/*
   void isCheckedCheckbox() {
     if (isChecked) {
       controller.email.text;
@@ -66,34 +63,33 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
       controller.email.clear();
       controller.password.clear();
     }
-  }
+  }*/
 
   void _handleLogin() {
     if (_formKeyLogin.currentState!.validate()) {
       // Perform signup logic here
 
-    /*  LoginController.instance.loginWithFirebase(
+      /*  LoginController.instance.loginWithFirebase(
           controller.email.text.trim(), controller.password.text.trim());
 */
-      isCheckedCheckbox();
-      loginUser();
+      //isCheckedCheckbox();
+     // loginUser();
     }
   }
 
-  Future<void> loginUser() async {
+ /* Future<void> loginUser() async {
     try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: controller.email.text.trim(),
-        password: controller.password.text.trim(),
-      );
-
-
+      //UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+       // email: controller.email.text.trim(),
+       // password: controller.password.text.trim(),
+    //  );
 
       // Get the logged-in user's UID
-      String uid = userCredential.user!.uid;
+    //  String uid = userCredential.user!.uid;
 
       // Retrieve the user's profile data from Firestore
-      DocumentSnapshot snapshot = await _firestore.collection('users').doc(uid).get();
+      DocumentSnapshot snapshot =
+        //  await _firestore.collection('teachers').doc(uid).get();
 
       if (snapshot.exists) {
         Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
@@ -101,59 +97,51 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
         String lastName = userData['lastName'];
         String mobileNumber = userData['mobileNumber'];
         String email = userData['email'];
-        await UserAuth.saveTeacherProfileData(email,lastName,firstName,mobileNumber);
 
-        Get.snackbar(
-          "Success",
-          "Login Successfully",
-          icon: const CircleAvatar (backgroundColor: Colors.green, child: Icon(Icons.check, color: Colors.white)),
-          snackPosition: SnackPosition.TOP,
-        );
+        //save the data to shared preferences
+        await UserAuth.saveTeacherProfileData(
+            email, lastName, firstName, mobileNumber);
+        UserAuth.getTeacherProfileData();
 
-
-/*
-        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-        await sharedPreferences.setString("email", email);
-        await  sharedPreferences.setString("firstName", firstName);
-        await sharedPreferences.setString("lastName", lastName);
-        await sharedPreferences.setString("mobileNumber", mobileNumber);*/
-
-
-
-
-        // Use the user's profile data
-      //  print('First Name: ${sharedPreferences.getString("firstName")}');
-        print('Last Name: $lastName');
-        print('Mobile Number: $mobileNumber');
-
-
-        void getData() async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          String? value = prefs.getString('key');
-          print('Retrieved value: $value');
-        }
-
-
-
-
-        Get.to(() =>  const TeacherBottomNavBarScreen(),
+        Get.to(() => const TeacherBottomNavBarScreen(),
             duration: const Duration(milliseconds: 500),
             transition: Transition.rightToLeftWithFade);
-
-
-
-
       } else {
-        print('User profile data not found');
+        log('User profile data not found');
+
+        Get.snackbar(
+          "Error",
+          "User profile data not found",
+          icon: const CircleAvatar(
+              backgroundColor: Colors.green,
+              child: Icon(Icons.check, color: Colors.white)),
+          snackPosition: SnackPosition.TOP,
+        );
       }
 
-      print('Login successful');
+      log('Login successful');
+
+      Get.snackbar(
+        "Success",
+        "Login Successfully",
+        icon: const CircleAvatar(
+            backgroundColor: Colors.green,
+            child: Icon(Icons.check, color: Colors.white)),
+        snackPosition: SnackPosition.TOP,
+      );
     } catch (e) {
-      print('Error logging in: $e');
+      log('Error logging in: $e');
+
+      Get.snackbar(
+        "Error",
+        "'Error logging in: $e'",
+        icon: const CircleAvatar(
+            backgroundColor: Colors.green,
+            child: Icon(Icons.check, color: Colors.white)),
+        snackPosition: SnackPosition.TOP,
+      );
     }
-  }
-
-
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -205,7 +193,7 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                               hintText: 'Enter your registered email',
                               textInputType: TextInputType.emailAddress,
                               preFixIcon: const Icon(Icons.email),
-                              controller: controller.email,
+                              controller: TextEditingController(),
                               focusNode: _focusNodeEmail,
                             ),
                             const SizedBox(
@@ -221,7 +209,7 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                               hintText: 'Enter your Password',
                               obSecureText: true,
                               preFixIcon: const Icon(Icons.password),
-                              controller: controller.password,
+                              controller: TextEditingController(),
                               focusNode: _focusNodePassword,
                             ),
                             const SizedBox(
@@ -250,7 +238,7 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                             const SizedBox(
                               height: 18,
                             ),
-                             GradiantButton(
+                            GradiantButton(
                                 buttonText: 'Login', onPressed: _handleLogin),
                             const SizedBox(
                               height: 18,
@@ -258,7 +246,7 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                             GradiantButton(
                               buttonText: 'Register',
                               onPressed: () {
-                                Get.to(() => const SignupScreen(),
+                                Get.to(() => const TeacherRegistrationScreen(),
                                     duration: const Duration(milliseconds: 500),
                                     transition: Transition.rightToLeftWithFade);
                               },

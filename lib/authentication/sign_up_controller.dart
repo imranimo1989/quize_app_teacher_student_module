@@ -18,7 +18,7 @@ class SignUpController extends GetxController{
 
   //call this function from design & it will do the rest
   void registration(String email, String password) {
-    AuthController.instance.createUserWithEmailAndPassword(email, password);
+   // AuthController.instance.createUserWithEmailAndPassword(email, password);
 
     print(email.toString());
     print(password.toString());

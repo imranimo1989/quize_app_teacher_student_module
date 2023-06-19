@@ -30,7 +30,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
 
-  getUserProfileData() async {
+  getStudentProfileData() async {
     // Retrieve the user's profile data from Firestore
     DocumentSnapshot snapshot =
         await _firestore.collection('students').doc(widget.uId).get();
@@ -52,9 +52,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
 
   @override
   void initState() {
-    getUserProfileData();
-
-    UserAuth.getStudentProfileData();
+    getStudentProfileData();
     super.initState();
   }
 

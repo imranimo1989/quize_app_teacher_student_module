@@ -121,7 +121,7 @@ class _TeacherRegistrationScreenState extends State<TeacherRegistrationScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Student Registration"),
+        title: const Text("Teacher Registration"),
         flexibleSpace: gradiantColor(),
       ),
       body: SingleChildScrollView(

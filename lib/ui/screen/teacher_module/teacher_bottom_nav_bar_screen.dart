@@ -1,10 +1,16 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:quize_app_teacher_student_module/authentication/user_auth.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/quiz_list_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/student_list_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/teacher_dashboard_screen.dart';
+import 'package:quize_app_teacher_student_module/ui/screen/teacher_module/teacher_login_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/utility/colors.dart';
+import 'package:quize_app_teacher_student_module/ui/utility/snac_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../authentication/auth_controller.dart';
@@ -22,13 +28,39 @@ final String? uid;
 class _TeacherBottomNavBarScreenState extends State<TeacherBottomNavBarScreen> {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String? teacherFirstName, teacherLastName, teacherEmail, teacherMobileNumber;
 
 
-@override
-  void initState() {
-  UserAuth.getTeacherProfileData();
-  super.initState();
+
+
+  getTeacherProfileData() async {
+    // Retrieve the user's profile data from Firestore
+    DocumentSnapshot snapshot =
+    await _firestore.collection('teacher').doc(widget.uid).get();
+
+    if (snapshot.exists) {
+      Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
+      setState(() {
+        teacherFirstName = userData['firstName'];
+        teacherLastName = userData['lastName'];
+        teacherMobileNumber = userData['mobileNumber'];
+        teacherEmail = userData['email'];
+      });
+
+      log(teacherFirstName!);
+
+    } else {
+      log('User profile data not found');
+    }
   }
+
+  @override
+  void initState() {
+    getTeacherProfileData();
+    super.initState();
+  }
+
 
   final List<Widget> navScreenItem = [
     const TeacherDashboardScreen(),
@@ -36,23 +68,21 @@ class _TeacherBottomNavBarScreenState extends State<TeacherBottomNavBarScreen> {
     const StudentListScreen(),
 
   ];
+
   int _selectedIndex =0;
 
 
-
-
   Future<void> _logOut() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.clear();
-  //  await AuthController.instance.logout();
+    await _auth.signOut();
+    successSnackBar("Logout successfully");
 
+    Get.off(() => const TeacherLoginScreen());
   }
 
 
   @override
   Widget build(BuildContext context) {
 
-    print(UserAuth.teacherEmail);
 
     return Scaffold(
         appBar: AppBar(
@@ -74,11 +104,11 @@ class _TeacherBottomNavBarScreenState extends State<TeacherBottomNavBarScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${UserAuth.teacherFirstName??""} ${UserAuth.teacherLastName ??""}",
+                      "$teacherFirstName $teacherLastName",
                       style:
                       const TextStyle(fontSize: 18, fontWeight: FontWeight.w700,color: Colors.white),
                     ),
-                    Text(UserAuth.teacherEmail??"",style: const TextStyle(color: Colors.white),),
+                    Text("$teacherEmail",style: const TextStyle(color: Colors.white),),
                   ],
                 )
               ],

@@ -12,16 +12,22 @@ import '../../widget/gradiant_button.dart';
 import 'play_quiz_screen.dart';
 
 class StudentDashboardScreen extends StatefulWidget {
-  final String uId;
 
-  const StudentDashboardScreen({Key? key, required this.uId}) : super(key: key);
+final String studentId;
+   const StudentDashboardScreen(this.studentId, {super.key});
 
   @override
   State<StudentDashboardScreen> createState() => _StudentDashboardScreenState();
 }
 
 class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
+
+
+
+
   String? stdFirstName, stdLastName, stdEmail, stdMobileNumber;
+  int yourScore =0;
+
 
   //create instance for firestore and auth
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -30,11 +36,12 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
   getStudentProfileData() async {
     // Retrieve the user's profile data from Firestore
     DocumentSnapshot snapshot =
-        await _firestore.collection('students').doc(widget.uId).get();
+        await _firestore.collection('students').doc(widget.studentId).get();
 
     if (snapshot.exists) {
       Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
       setState(() {
+        yourScore = userData["score"] as int;
         stdFirstName = userData['firstName'];
         stdLastName = userData['lastName'];
         stdMobileNumber = userData['mobileNumber'];
@@ -42,6 +49,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
       });
 
       log(stdFirstName!);
+      log("score: $yourScore");
     } else {
       log('User profile data not found');
     }
@@ -117,7 +125,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
             ),
 
 
-             const Text("Score: 0",style: TextStyle(color: primaryColor, fontWeight: FontWeight.w600,fontSize: 16),),
+              Text("Your Score: $yourScore",style: const TextStyle(color: primaryColor, fontWeight: FontWeight.w600,fontSize: 16),),
             const SizedBox(
               height: 16,
             ),
@@ -125,7 +133,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
               buttonText: 'Play Quiz',
               onPressed: () {
                 Get.to(
-                  () => const PlayQuizScreen(),
+                  () =>  PlayQuizScreen(studentId: widget.studentId,),
                 );
               },
             )

@@ -28,7 +28,9 @@ class MyApp extends StatelessWidget {
           primary: primaryColor,
         ),
         // Set primary color to transparent
+        //appbar theme
       ),
+
       home: const SplashScreen(),
       initialBinding: StoreBindings(),
     );

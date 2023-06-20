@@ -21,16 +21,17 @@ class _StudentListScreenState extends State<StudentListScreen> {
         stream: _firestore.collection('students').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            final questions = snapshot.data!.docs;
+            final student = snapshot.data!.docs;
 
             return ListView.builder(
-              itemCount: questions.length,
+              itemCount: student.length,
               itemBuilder: (context, index) {
-                final questionData = questions[index].data() as Map<String, dynamic>;
-                final lastName = questionData['lastName'] as String;
-                final firstName = questionData['firstName'] as String;
-                final email = questionData['email'] as String;
-                final mobileNumber = questionData['mobileNumber'] as String;
+                final studentData = student[index].data() as Map<String, dynamic>;
+                final lastName = studentData['lastName'] as String;
+                final firstName = studentData['firstName'] as String;
+                final email = studentData['email'] as String;
+                final mobileNumber = studentData['mobileNumber'] as String;
+                final score = studentData['score'] as int;
 
                 return Card(
                   child: ListTile(
@@ -44,7 +45,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
                         Text('Mobile: $mobileNumber'),
                       ],
                     ),
-                    trailing: const Text("Score: 0"),
+                    trailing:  Text("Score: $score",style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
                   ),
                 );
               },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:quize_app_teacher_student_module/ui/widget/gradiant_button.dart';
 
 class NewQuizQuestionScreen extends StatefulWidget {
   const NewQuizQuestionScreen({super.key});
@@ -113,11 +114,10 @@ class _NewQuizQuestionScreenState extends State<NewQuizQuestionScreen> {
                     ),
                   ],
                 ),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: _submitQuizQuestion,
-                child: const Text('Submit'),
-              ),
+              const SizedBox(height: 36.0),
+
+              GradiantButton(buttonText: "Submit", onPressed: _submitQuizQuestion)
+
             ],
           ),
         ),

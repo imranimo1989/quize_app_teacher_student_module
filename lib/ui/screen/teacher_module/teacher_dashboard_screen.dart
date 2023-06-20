@@ -62,7 +62,7 @@ super.initState();
                   children: [
                     GradiantDashboardCard(title: "Total Questions", number: questions?.length??0 ,),
                     const SizedBox(width: 8,),
-                    const GradiantDashboardCard(title: "Total Answers", number: 30,),
+                    const GradiantDashboardCard(title: "Total Answers", number: 0,),
 
                   ],
                 ),
@@ -74,7 +74,7 @@ super.initState();
                   children: [
                     GradiantDashboardCard(title: "Total Students", number: totalStudents,),
                     SizedBox(width: 8,),
-                    GradiantDashboardCard(title: "Inactive Student",number: 30,),
+                    GradiantDashboardCard(title: "Inactive Student",number: 0,),
 
                   ],
                 ),

@@ -86,7 +86,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
 
       log('Login successful');
 
-      Get.offAll(() =>  StudentDashboardScreen(uId: uid,),
+      Get.offAll(() =>  StudentDashboardScreen(uid.toString()),
           duration: const Duration(milliseconds: 500),
           transition: Transition.rightToLeftWithFade);
 

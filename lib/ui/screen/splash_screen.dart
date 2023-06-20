@@ -16,9 +16,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-
-    Future.delayed(const Duration(seconds: 3)).then((value)=> Get.off(()=>const UserSelectionScreen()));
-
+    Future.delayed(const Duration(seconds: 3))
+        .then((value) => Get.off(() => const UserSelectionScreen()));
 
     super.initState();
   }
@@ -32,8 +31,10 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text("Iqra Quiz", style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white),),
-              SizedBox(height: 20,),
-              Text("version: 1.0", style: TextStyle(color: Colors.white60 ),)
+              SizedBox(height: 16,),
+              Text("version: 1.0", style: TextStyle(color: Colors.white60 ),),
+              SizedBox(height: 24,),
+              Text("This Quiz Apps Design, Development & publish by\n Mohammed Imran\n OSTAD Bach 02 - 2023", style: TextStyle(color: Colors.white60, height: 1.5),textAlign: TextAlign.center,)
             ],
           ),
         ),

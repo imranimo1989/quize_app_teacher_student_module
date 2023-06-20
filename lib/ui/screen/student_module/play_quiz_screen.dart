@@ -1,13 +1,14 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:quize_app_teacher_student_module/ui/screen/student_module/student_dashboard_screen.dart';
 import 'package:quize_app_teacher_student_module/ui/utility/snac_bar.dart';
 import 'package:quize_app_teacher_student_module/ui/widget/gradiant_button.dart';
 
 class PlayQuizScreen extends StatefulWidget {
-  const PlayQuizScreen({super.key});
+  final String? studentId;
+  const PlayQuizScreen({super.key, required this.studentId});
 
   @override
   _PlayQuizScreenState createState() => _PlayQuizScreenState();
@@ -69,12 +70,65 @@ class _PlayQuizScreenState extends State<PlayQuizScreen> {
         });
       } else {
 
-       Get.back();
-        // Handle end of quiz
-        // You can show the final score or navigate to another screen
-      }
+
+        FirebaseFirestore.instance
+            .collection('students')
+            .doc(widget.studentId)
+            .get()
+            .then((doc) {
+          if (doc.exists) {
+            final existingScore = doc.data()?['score'] ?? 0;
+            final totalQuestions = doc.data()?['totalQuestions'] ?? 0;
+
+            final newScore = existingScore + score;
+
+            FirebaseFirestore.instance
+                .collection('students')
+                .doc(widget.studentId)
+                .update({
+              'score': newScore,
+              'totalQuestions': totalQuestions + quizzes.length,
+            })
+            .then((value) {
+          // Score and total questions saved successfully
+          // navigate to another screen or show a success message
+          Get.offAll(()=>StudentDashboardScreen(widget.studentId.toString()));
+
+          Get.dialog(
+            AlertDialog(
+              title: const Text('Well done! Quiz Finished'),
+              content: Text('Your score: $score / ${quizzes.length}'),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Get.back(); // Close the dialog
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        })
+                .catchError((error) {
+              // Error occurred while saving to Firestore
+              // Handle the error, e.g., show an error message
+              Get.snackbar('Error', 'Failed to save score: $error');
+            });
+          } else {
+            // Student document not found in Firestore
+            // Handle the error, e.g., show an error message
+            Get.snackbar('Error', 'Student not found');
+          }
+        })
+            .catchError((error) {
+          // Error occurred while fetching the document from Firestore
+          // Handle the error, e.g., show an error message
+          Get.snackbar('Error', 'Failed to fetch student data: $error');
+        });  }
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +175,7 @@ class _PlayQuizScreenState extends State<PlayQuizScreen> {
                   Expanded(
                     flex: 1,
                     child: Text(
-                      'Quiz: ${currentQuestionIndex+1}/${quizzes.length - currentQuestionIndex - 1}',
+                      'Quiz: ${currentQuestionIndex+1}/${quizzes.length+1 - currentQuestionIndex - 1}',
                       // Display the remaining quiz count
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.w700),
@@ -145,10 +199,11 @@ class _PlayQuizScreenState extends State<PlayQuizScreen> {
                 }),
               ),
             const SizedBox(height: 16.0),
-            GradiantButton(
+             GradiantButton(
               onPressed: goToNextQuestion,
-              buttonText: currentQuestionIndex < quizzes.length - 1 ? 'Next' : 'Finish',
-            ),
+              buttonText: currentQuestionIndex < quizzes.length - 1 ? 'Next' :"Finish",
+            )
+
 
           ],
         ),
@@ -180,3 +235,25 @@ class OptionTile extends StatelessWidget {
     );
   }
 }
+
+
+void resultDialog(context,score,totalQuiz){
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('Quiz Finished'),
+        content: Text('Your score: $score / $totalQuiz'),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context); // Close the dialog
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}
+

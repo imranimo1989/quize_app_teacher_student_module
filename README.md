@@ -19,4 +19,36 @@ samples, guidance on mobile development, and a full API reference.
 
 <img alt="App Screenshot" src="screenshots/splash_screen.png" width="350"/>
 
-## quiz screen
+## Select Module 
+here we i have design two module 
+
+<img alt="App Screenshot" src="screenshots/select_module_option.png" width="350"/>
+
+## Teacher  Module Login Screen
+<img alt="App Screenshot" src="screenshots/teacher_module_login_screen.png" width="350"/>
+
+## Teacher  Module Registration Screen
+<img alt="App Screenshot" src="screenshots/teacher_module_registration_screen.png" width="350"/>
+
+## Teacher  Module Dashboard Screen
+<img alt="App Screenshot" src="screenshots/teacher_module_dashboard_screen.png" width="350"/>
+
+## Teacher  Module quiz list Screen
+<img alt="App Screenshot" src="screenshots/teacher_module_student_list_screen.png" width="350"/>
+
+## Teacher  Module add new quiz Screen
+<img alt="App Screenshot" src="screenshots/teacher_module_new_quiz_screen.png" width="350"/>
+
+## Teacher  Module user list Screen
+<img alt="App Screenshot" src="screenshots/teacher_module_student_list_screen.png" width="350"/>
+
+
+
+## Student Module Dashboard Screen
+<img alt="App Screenshot" src="screenshots/student_module_dashboard_screen.png" width="350"/>
+
+## Student Module Play quiz Screen
+<img alt="App Screenshot" src="screenshots/student_module_play_quiz_screen.png" width="350"/>
+
+## Teacher  Module result Screen
+<img alt="App Screenshot" src="screenshots/quiz_result.png" width="350"/>

@@ -1,19 +1,34 @@
-# quize_app_teacher_student_module
+# quiz_app_teacher_student_module
 
-A new Flutter project.
+A new Flutter project for ostad bacth 02 project assignment .
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Quiz App with Teacher and Student Modules
 
-A few resources to get you started if this is your first Flutter project:
+Objective: To build a quiz app that allows teachers to create quizzes and students to take quizzes.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Requirements:
+1. Login Module:
+- Implement a login module for both teachers and students using Firebase authentication.
+- 
+2. Teacher Module:
+- Teachers should be able to create quizzes by adding questions.
+- Teachers should have the ability to view the results of quizzes.
+- 
+3. Student Module:
+- Students should be able to view the available quizzes.
+- Students should be able to answer the questions and submit their answers.
+- 
+4. Dashboard:
+- Create a dashboard for both teachers and students.
+- Display relevant information such as available quizzes and ongoing quizzes.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+5. Firebase Integration:
+- Set up Firebase for authentication and database storage.
+
+6. User Interface:
+- Design a user-friendly interface for the app.
 
 ## Iqra Quiz App Download link
 [Download Link](https://drive.google.com/uc?id=1gIqW1xePM9JQMFMj90_ioAjk_naQ-VWX&export=download)

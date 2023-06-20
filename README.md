@@ -15,6 +15,10 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+## Iqra Quiz App Download link
+[Download Link](https://drive.google.com/uc?id=1gIqW1xePM9JQMFMj90_ioAjk_naQ-VWX&export=download)
+
+
 ## Splash Screen
 
 <img alt="App Screenshot" src="screenshots/splash_screen.png" width="350"/>
